@@ -42,11 +42,3 @@ const getRandomFloat = function (min, max, precision) {
 
 getRandomInteger(5, 63);
 getRandomFloat(0.123, 985.12, 2);
-
-// for (let i = 0; i < 10; i++) {
-//   console.log(getRandomInteger(5, 63));
-// }
-
-// for (let i = 0; i < 10; i++) {
-//   console.log(getRandomFloat(9.87654, 1234.567, 2));
-// }
