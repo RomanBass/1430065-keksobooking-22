@@ -72,11 +72,12 @@ const getRandomFloat = function (min, max, precision) {
 
 const reduceAndRandomizeArray = function (array) {
   let tinyArray = [];
+  const tinyArrayLength = getRandomInteger(0, array.length);
   for (let i = array.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
-  for (let k = 0; k < getRandomInteger(0, array.length); k++) {
+  for (let k = 0; k < tinyArrayLength; k++) {
     tinyArray[k] = array[k];
   }
   return tinyArray;
