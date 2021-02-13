@@ -5,7 +5,7 @@ const AUTHORS_MAX_NUMBER = 8;
 const CHECK_IN_OUT = ['12:00', '13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const DESCRIPTIONS = ['Уютное место, рядом вокзал', 'Тихое место, рядом казино.', 'Соседи повышенного уровня культуры, рядом прачечная.', 'Для постояльцев с IQ не выше 90.'];
-const PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'https://i2.wp.com/www.sonmezrealestate.com/wp-content/uploads/2018/05/080-1.jpg?fit=1688%2C1125&ssl=1', 'https://elets-adm.ru/assets/images/resources/4281/c50acc2e5c569e61107070cc7fdb5ac0ae840194.jpg'];
+const PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'https://elets-adm.ru/assets/images/resources/4281/c50acc2e5c569e61107070cc7fdb5ac0ae840194.jpg'];
 
 const TITLES = ['Замок с приведениями.', 'В тесноте, но не в обиде.', 'Царские покои.', 'Хрущёвка ХХI века.'];
 const LocationRange = {
@@ -61,5 +61,5 @@ const createEstateObject = () => {
 
 const estateObjects = new Array(ESTATE_OBJECTS_NUMBER).fill(null).map(() => createEstateObject());
 
-estateObjects;
+export {estateObjects};
 //console.log(estateObjects);
