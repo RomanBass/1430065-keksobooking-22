@@ -7,48 +7,54 @@ const formCheckDepartureSelector = form.querySelector('#timeout');
 const formCheckEntryOptions = form.querySelectorAll('#timein option');
 const formCheckDepartureOptions = form.querySelectorAll('#timeout option');
 let minPrice = 1000;
+let estateObjectType = 'Квартира';
 
-formHousingTypeSelector.addEventListener('change', (evt) => { // изменение мин цены при изменении типа жилья
-  switch (evt.target.value) {
-    case 'bungalow':
-      minPrice = 0;
-      break;
-    case 'flat':
-      minPrice = 1000;
-      break;
-    case 'house':
-      minPrice = 5000;
-      break;
-    case 'palace':
-      minPrice = 10000;
-      break;
-  }
-  formPriceInput.placeholder = minPrice;
-  formPriceInput.value = '';
-});
-
-formPriceInput.addEventListener('input', () => {  // валидация величины цены
+const checkPriceValidity = (minPriceValue, estateObjectTypeValue) => { // функция валидации величины цены
   const price = formPriceInput.value;
-
   if (price > MAX_PRICE) {
-    formPriceInput.setCustomValidity('Больше миллиона цен не бывает');
+    formPriceInput.setCustomValidity('Больше миллиона цена быть не может');
   } else if (price < minPrice) {
-    formPriceInput.setCustomValidity(`Меньше ${minPrice} цены не бывает`);
+    formPriceInput.setCustomValidity(`Меньше ${minPriceValue} цены на объект "${estateObjectTypeValue}" быть не может`);
   } else {
     formPriceInput.setCustomValidity('');
   }
-
   formPriceInput.reportValidity();
+};
+
+formHousingTypeSelector.addEventListener('change', (evt) => { // изменение минимальной цены при изменении типа жилья
+  switch (evt.target.value) {
+    case 'bungalow':
+      minPrice = 0;
+      estateObjectType = 'Бунгало';
+      break;
+    case 'flat':
+      minPrice = 1000;
+      estateObjectType = 'Квартира';
+      break;
+    case 'house':
+      minPrice = 5000;
+      estateObjectType = 'Дом';
+      break;
+    case 'palace':
+      minPrice = 10000;
+      estateObjectType = 'Дворец';
+      break;
+  }
+  checkPriceValidity(minPrice, estateObjectType); // валидация величины цены
 });
 
-formPriceInput.addEventListener('invalid', function () {  // валидация введения цены
+formPriceInput.addEventListener('input', () => {
+  checkPriceValidity(minPrice, estateObjectType); // валидация величины цены
+});
+
+formPriceInput.addEventListener('invalid', () => {  // валидация наличия цены
   if (formPriceInput.validity.valueMissing) {
-    formPriceInput.setCustomValidity('Как же без цены?');
+    formPriceInput.setCustomValidity('Без указания цены объявление не публикуется');
   }
 });
 
-const makeSelectorsDependent = (firstSelector, secondSelectorOptions) => { // синхронизация времён въезда и выезда
-  firstSelector.addEventListener('change', function (evt) {
+const makeSelectorsDependent = (firstSelector, secondSelectorOptions) => { // синхронизация двух селекторов
+  firstSelector.addEventListener('change', (evt) => {
     for (let i = 0; i < secondSelectorOptions.length; i++) {
       if (secondSelectorOptions[i].value === evt.target.value) {
         secondSelectorOptions[i].selected = true;
@@ -57,5 +63,5 @@ const makeSelectorsDependent = (firstSelector, secondSelectorOptions) => { // с
   });
 };
 
-makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureOptions);
-makeSelectorsDependent(formCheckDepartureSelector, formCheckEntryOptions);
+makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureOptions); // синхронизация времён въезда и выезда
+makeSelectorsDependent(formCheckDepartureSelector, formCheckEntryOptions); // синхронизация времён выезда и въезда
