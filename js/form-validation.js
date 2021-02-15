@@ -40,6 +40,7 @@ formHousingTypeSelector.addEventListener('change', (evt) => { // изменен�
       estateObjectType = 'Дворец';
       break;
   }
+  formPriceInput.placeholder = minPrice;
   checkPriceValidity(minPrice, estateObjectType); // валидация величины цены
 });
 
