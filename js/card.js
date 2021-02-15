@@ -3,8 +3,8 @@ import {estateObjects} from './estate-objects.js';
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const mapCanvas = document.querySelector('#map-canvas');
 
-const renderCard = function (estateObject) {
-  let newCard = cardTemplate.cloneNode(true);
+const renderCard = (estateObject) => {
+  const newCard = cardTemplate.cloneNode(true);
 
   newCard.querySelector('img').src = estateObject.author.avatar;
   newCard.querySelector('.popup__title').textContent = estateObject.offer.title;
