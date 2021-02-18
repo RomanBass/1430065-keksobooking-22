@@ -6,6 +6,8 @@ const formCheckEntrySelector = form.querySelector('#timein');
 const formCheckDepartureSelector = form.querySelector('#timeout');
 const formCheckEntryOptions = form.querySelectorAll('#timein option');
 const formCheckDepartureOptions = form.querySelectorAll('#timeout option');
+const formFieldSets = form.querySelectorAll('fieldset');
+
 let minPrice = 1000;
 let estateObjectType = 'Квартира';
 
@@ -66,3 +68,5 @@ const makeSelectorsDependent = (firstSelector, secondSelectorOptions) => { // с
 
 makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureOptions); // синхронизация времён въезда и выезда
 makeSelectorsDependent(formCheckDepartureSelector, formCheckEntryOptions); // синхронизация времён выезда и въезда
+
+export {form, formFieldSets};
