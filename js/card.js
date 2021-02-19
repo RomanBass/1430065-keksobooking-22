@@ -56,3 +56,5 @@ const renderCard = (estateObject) => {
 mapCanvas; // заглушка линтера
 renderCard;// заглушка линтера
 estateObjects;// заглушка линтера
+
+export {renderCard}
