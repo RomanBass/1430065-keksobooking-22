@@ -62,4 +62,3 @@ const createEstateObject = () => {
 const estateObjects = new Array(ESTATE_OBJECTS_NUMBER).fill(null).map(() => createEstateObject());
 
 export {estateObjects};
-//console.log(estateObjects);
