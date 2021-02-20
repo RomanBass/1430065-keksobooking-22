@@ -47,7 +47,7 @@ mainPinMarker.addTo(map); // отрисовка главной метки
 
 formAddress.value = `${TokyoCenterView.LATITUDE}, ${TokyoCenterView.LONGITUDE}`; // передача начальных координат главной метки в поле адреса
 
-mainPinMarker.on('moveend', (evt) => { // передача координат главной метки в поле адреса после перемещения
+mainPinMarker.on('move', (evt) => { // передача координат главной метки в поле адреса после перемещения
   const MainMarkerCoordinates = {
     LATITUDE: evt.target.getLatLng().lat,
     LONGITUDE: evt.target.getLatLng().lng,

@@ -1,8 +1,8 @@
 import {form, formFieldSets} from './form-validation.js';
 import {filterForm, filters} from './filter.js';
 
-const switchPageActivation = (booleanParameter) => { // функция активации и деактивации страницы, при booleanParameter = true деактивирует, при boolean = false активирует
-  if (booleanParameter) {
+const switchPageActivation = (deactivate) => { // функция активации и деактивации страницы, при deactivate = true деактивирует, при deactivate = false активирует
+  if (deactivate) {
     form.classList.add('ad-form--disabled');
     filterForm.classList.add('map__filters--disabled');
   } else {
@@ -11,11 +11,11 @@ const switchPageActivation = (booleanParameter) => { // функция акти�
   }
 
   formFieldSets.forEach((fieldSet) => { // все поля формы делаются неактивными
-    fieldSet.disabled = booleanParameter;
+    fieldSet.disabled = deactivate;
   });
 
   filters.forEach((filter) => { // все фильтры делаются неактивными
-    filter.disabled = booleanParameter;
+    filter.disabled = deactivate;
   });
 };
 
