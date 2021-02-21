@@ -20,7 +20,7 @@ let estateObjectType = 'Квартира';
 
 formAddress.readOnly = true; // делаем поле адреса только для чтения
 
-formTitleInput.addEventListener('input', function () { // функция валидации длины заголовка при его введении
+formTitleInput.addEventListener('input', () => { // функция валидации длины заголовка при его введении
   const valueLength = formTitleInput.value.length;
 
   if (valueLength < TITLE_MIN_LENGTH) {
@@ -34,7 +34,7 @@ formTitleInput.addEventListener('input', function () { // функция вал�
   formTitleInput.reportValidity();
 });
 
-formTitleInput.addEventListener('invalid', function () { // функция валидации наличия заголовка
+formTitleInput.addEventListener('invalid', () => { // функция валидации наличия заголовка
   if (formTitleInput.validity.valueMissing) {
     formTitleInput.setCustomValidity('Без заголовка объявление не публикуется');
   }
@@ -95,13 +95,13 @@ const makeSelectorsDependent = (firstSelector, secondSelectorOptions) => { // с
   });
 };
 
-const getConformity = function (roomsNumber, guestsNumber) {
+const getConformity = (roomsNumber, guestsNumber) => {
   if (roomsNumber.value === '100' && guestsNumber.value !== '0') {
-    guestsNumber.setCustomValidity('Этот номер не для гостей');
+    guestsNumber.setCustomValidity('Выбранное помещение не предназначено для проживания гостей');
   } else if (roomsNumber.value !== '100' && guestsNumber.value === '0') {
-    guestsNumber.setCustomValidity('Этому варианту соответствует номер в 100 комнат');
-  } else if (roomsNumber.value !== '100' && (roomsNumber.value < guestsNumber.value || guestsNumber.value === '0')) {
-    guestsNumber.setCustomValidity('Количество гостей не соответствует местам в номере');
+    guestsNumber.setCustomValidity('Варианту "не для гостей" соответствует только помещение в 100 комнат');
+  } else if (roomsNumber.value < guestsNumber.value) {
+    guestsNumber.setCustomValidity('Количество гостей не может быть больше количества мест');
   } else {
     guestsNumber.setCustomValidity('');
   }
