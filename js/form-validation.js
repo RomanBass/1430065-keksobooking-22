@@ -120,3 +120,49 @@ makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureOptions); // с
 makeSelectorsDependent(formCheckDepartureSelector, formCheckEntryOptions); // синхронизация времён выезда и въезда
 
 export {form, formFieldSets, formAddress};
+
+// ---------------------------------------------------------------------------------------------------------------
+import {sendData} from './server.js'
+const main = document.querySelector('main');
+const formSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+const formSuccessNotice = formSuccessTemplate.cloneNode(true);
+const formErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+const formErrorNotice = formErrorTemplate.cloneNode(true);
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const formData = new FormData(evt.target);
+  sendData(throwFormSuccessNotice, throwFormErrorNotice, formData); // отправка данных формы на сервер
+});
+
+const throwFormSuccessNotice = () => { // вывод сообщения об успешной отправке формы
+  main.appendChild(formSuccessNotice);
+
+  document.addEventListener('click', () => {
+    if (main.contains(formSuccessNotice)) {
+      main.removeChild(formSuccessNotice);
+    }
+  });
+};
+
+const throwFormErrorNotice = (errorMessage) => { // вывод сообщения об ошибке при формы
+  main.appendChild(formErrorNotice);
+  const formErrorNoticeText = document.querySelector('.error__message'); // извлекаем параграф с сообщением
+  formErrorNoticeText.textContent = errorMessage; // корректируем сообщение
+
+  document.addEventListener('click', () => {
+    if (main.contains(formErrorNotice)) {
+      main.removeChild(formErrorNotice);
+    }
+  });
+};
+
+// document.addEventListener('click', () => {
+//   if (main.contains(formSuccessNotice)) {
+//     main.removeChild(formSuccessNotice);
+//   }
+//   if (main.contains(formErrorNotice)) {
+//     main.removeChild(formErrorNotice);
+//   }
+// });
+

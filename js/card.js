@@ -1,7 +1,4 @@
-import {estateObjects} from './estate-objects.js';
-
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-const mapCanvas = document.querySelector('#map-canvas');
 
 const renderCard = (estateObject) => {
   const newCard = cardTemplate.cloneNode(true);
@@ -50,11 +47,5 @@ const renderCard = (estateObject) => {
   return newCard;
 
 };
-
-// mapCanvas.appendChild(renderCard(estateObjects[0])); // генерация одной карточки
-
-mapCanvas; // заглушка линтера
-renderCard;// заглушка линтера
-estateObjects;// заглушка линтера
 
 export {renderCard}
