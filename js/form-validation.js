@@ -123,6 +123,8 @@ export {form, formFieldSets, formAddress};
 
 // ---------------------------------------------------------------------------------------------------------------
 import {sendData} from './server.js'
+import {resetMainPinPosition} from './map.js';
+
 const main = document.querySelector('main');
 const formSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
 const formSuccessNotice = formSuccessTemplate.cloneNode(true);
@@ -131,6 +133,7 @@ const formErrorNotice = formErrorTemplate.cloneNode(true);
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
+  resetMainPinPosition();
   const formData = new FormData(evt.target);
   sendData(throwFormSuccessNotice, throwFormErrorNotice, formData); // отправка данных формы на сервер
 });
@@ -153,6 +156,8 @@ const throwFormErrorNotice = (errorMessage) => { // вывод сообщени�
   document.addEventListener('click', () => {
     if (main.contains(formErrorNotice)) {
       main.removeChild(formErrorNotice);
+      form.reset();
+      resetMainPinPosition();
     }
   });
 };

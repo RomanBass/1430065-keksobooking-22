@@ -1,5 +1,8 @@
-import {form, formFieldSets} from './form-validation.js';
+// import {form, formFieldSets} from './form-validation.js';
 import {filterForm, filters} from './filter.js';
+
+const form = document.querySelector('.ad-form');
+const formFieldSets = form.querySelectorAll('fieldset');
 
 const switchPageActivation = (deactivate) => { // функция активации и деактивации страницы, при deactivate = true деактивирует, при deactivate = false активирует
   if (deactivate) {

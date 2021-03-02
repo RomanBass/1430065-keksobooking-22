@@ -1,9 +1,12 @@
 /* global L:readonly */
 import {switchPageActivation} from './page-activation.js';
-import {formAddress} from './form-validation.js';
+//import {formAddress} from './form-validation.js';
 import {showErrorMessage} from './util.js';
 import {renderCard} from './card.js';
 import {getData} from './server.js';
+
+const form = document.querySelector('.ad-form');
+const formAddress = form.querySelector('#address');
 
 const ESTATE_OBJECTS_NUMBER = 10;
 const TokyoCenterView = { // координаты центра Токио и начальный масштаб карты
@@ -44,6 +47,13 @@ const mainPinMarker = L.marker(
     icon: mainPinIcon,
   },
 );
+
+export const resetMainPinPosition = () => {
+  mainPinMarker.setLatLng({
+    lat: TokyoCenterView.LATITUDE,
+    lng: TokyoCenterView.LONGITUDE,
+  });
+};
 
 mainPinMarker.addTo(map); // отрисовка главной метки
 
