@@ -1,12 +1,9 @@
 /* global L:readonly */
 import {switchPageActivation} from './page-activation.js';
-//import {formAddress} from './form-validation.js';
 import {showErrorMessage} from './util.js';
 import {renderCard} from './card.js';
 import {getData} from './server.js';
-
-const form = document.querySelector('.ad-form');
-const formAddress = form.querySelector('#address');
+import {fillFormAddress} from './form.js';
 
 const ESTATE_OBJECTS_NUMBER = 10;
 const TokyoCenterView = { // координаты центра Токио и начальный масштаб карты
@@ -53,11 +50,15 @@ export const resetMainPinPosition = () => {
     lat: TokyoCenterView.LATITUDE,
     lng: TokyoCenterView.LONGITUDE,
   });
+  map.setView({
+    lat: TokyoCenterView.LATITUDE,
+    lng: TokyoCenterView.LONGITUDE,
+  }, TokyoCenterView.ZOOM);
 };
 
 mainPinMarker.addTo(map); // отрисовка главной метки
 
-formAddress.value = `${TokyoCenterView.LATITUDE}, ${TokyoCenterView.LONGITUDE}`; // передача начальных координат главной метки в поле адреса
+fillFormAddress(TokyoCenterView.LATITUDE, TokyoCenterView.LONGITUDE);
 
 mainPinMarker.on('move', (evt) => { // передача координат главной метки в поле адреса после перемещения
   const MainMarkerCoordinates = {
@@ -67,7 +68,7 @@ mainPinMarker.on('move', (evt) => { // передача координат гл�
   }
   const formAddressLatitude = Math.round(MainMarkerCoordinates.LATITUDE * 10 ** MainMarkerCoordinates.SIGNS_NUMBER) / 10 ** MainMarkerCoordinates.SIGNS_NUMBER;
   const formAddressLongitude = Math.round(MainMarkerCoordinates.LONGITUDE * 10 ** MainMarkerCoordinates.SIGNS_NUMBER) / 10 ** MainMarkerCoordinates.SIGNS_NUMBER;
-  formAddress.value = `${formAddressLatitude}, ${formAddressLongitude}`;
+  fillFormAddress(formAddressLatitude, formAddressLongitude);
 });
 
 const PinIcon = L.icon({ // создание иконок для меток, кроме главной
