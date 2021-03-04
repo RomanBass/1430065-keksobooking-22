@@ -78,3 +78,20 @@ const throwFormErrorNotice = (errorMessage) => { // вывод сообщени�
 export const fillFormAddress = (latitude, longitude) => {
   formAddress.value = `${latitude}, ${longitude}`; // передача начальных координат главной метки в поле адреса
 };
+
+//const form = document.querySelector('.ad-form');
+const formFieldSets = form.querySelectorAll('fieldset');
+
+export const switchFormActivation = (deactivator) => {
+  if (deactivator) {
+    form.classList.add('ad-form--disabled');
+
+  } else {
+    form.classList.remove('ad-form--disabled');
+  // filterForm.classList.remove('map__filters--disabled');
+  }
+
+  formFieldSets.forEach((fieldSet) => { // все поля формы делаются неактивными deactivator = true
+    fieldSet.disabled = deactivator;
+  });
+};
