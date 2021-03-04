@@ -1,13 +1,15 @@
 /* global L:readonly */
 import {switchPageActivation} from './page-activation.js';
-import {formAddress} from './form-validation.js';
-import {estateObjects} from './estate-objects.js';
-import {renderCard} from './card.js'
+import {showErrorMessage} from './util.js';
+import {renderCard} from './card.js';
+import {getData} from './server.js';
+import {fillFormAddress} from './form.js';
 
+const ESTATE_OBJECTS_NUMBER = 10;
 const TokyoCenterView = { // координаты центра Токио и начальный масштаб карты
   LATITUDE: 35.65858,
   LONGITUDE: 139.74544,
-  ZOOM: 12,
+  ZOOM: 9,
 }
 
 const map = L.map('map-canvas')
@@ -43,9 +45,20 @@ const mainPinMarker = L.marker(
   },
 );
 
+export const resetMainPinPosition = () => {
+  mainPinMarker.setLatLng({
+    lat: TokyoCenterView.LATITUDE,
+    lng: TokyoCenterView.LONGITUDE,
+  });
+  map.setView({
+    lat: TokyoCenterView.LATITUDE,
+    lng: TokyoCenterView.LONGITUDE,
+  }, TokyoCenterView.ZOOM);
+};
+
 mainPinMarker.addTo(map); // отрисовка главной метки
 
-formAddress.value = `${TokyoCenterView.LATITUDE}, ${TokyoCenterView.LONGITUDE}`; // передача начальных координат главной метки в поле адреса
+fillFormAddress(TokyoCenterView.LATITUDE, TokyoCenterView.LONGITUDE);
 
 mainPinMarker.on('move', (evt) => { // передача координат главной метки в поле адреса после перемещения
   const MainMarkerCoordinates = {
@@ -55,7 +68,7 @@ mainPinMarker.on('move', (evt) => { // передача координат гл�
   }
   const formAddressLatitude = Math.round(MainMarkerCoordinates.LATITUDE * 10 ** MainMarkerCoordinates.SIGNS_NUMBER) / 10 ** MainMarkerCoordinates.SIGNS_NUMBER;
   const formAddressLongitude = Math.round(MainMarkerCoordinates.LONGITUDE * 10 ** MainMarkerCoordinates.SIGNS_NUMBER) / 10 ** MainMarkerCoordinates.SIGNS_NUMBER;
-  formAddress.value = `${formAddressLatitude}, ${formAddressLongitude}`;
+  fillFormAddress(formAddressLatitude, formAddressLongitude);
 });
 
 const PinIcon = L.icon({ // создание иконок для меток, кроме главной
@@ -64,22 +77,28 @@ const PinIcon = L.icon({ // создание иконок для меток, к�
   iconAnchor: [20, 40],
 });
 
-estateObjects.forEach((estateObject) => { // отрисовка меток, кроме главной
-  const PinMarker = L.marker(
-    {
-      lat: estateObject.location.x,
-      lng: estateObject.location.y,
-    },
-    {
-      icon: PinIcon,
-    },
-  );
+const renderPins = (estateObjects) => { // отрисовка меток, кроме главной
+  const cyclesNumber = estateObjects.length <= ESTATE_OBJECTS_NUMBER ? estateObjects.length : ESTATE_OBJECTS_NUMBER; // считается количество итераций, на случай, если с сервера придёт данных меньше, чем количество показываемых объектов
+  for(let i = 0; i < cyclesNumber; i++) {
 
-  PinMarker
-    .addTo(map)
-    .bindPopup( // вызов попапа карточки объекта
-      renderCard(estateObject),
+    const PinMarker = L.marker(
+      {
+        lat: estateObjects[i].location.lat,
+        lng: estateObjects[i].location.lng,
+      },
+      {
+        icon: PinIcon,
+      },
     );
-});
 
-//export {TokyoCenterView};
+    PinMarker
+      .addTo(map)
+      .bindPopup( // вызов попапа карточки объекта
+        renderCard(estateObjects[i]),
+      );
+  }
+}
+
+getData(renderPins, showErrorMessage); // отрисовка пинов по данным с сервера или сообщения об ошибке
+
+export {TokyoCenterView};
