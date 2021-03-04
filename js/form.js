@@ -2,8 +2,8 @@ import {validateTitleLength, checkTitleExistence, checkPriceValidity, changeVali
   makeSelectorsDependent, getConformity} from './form-validation.js';
 import {sendData} from './server.js';
 
-const formTitleInput = document.querySelector('#title');
 const form = document.querySelector('.ad-form');
+const formTitleInput = document.querySelector('#title');
 const formHousingTypeSelector = form.querySelector('#type');
 const formPriceInput = form.querySelector('#price');
 const formCheckEntrySelector = form.querySelector('#timein');
@@ -11,6 +11,13 @@ const formCheckDepartureSelector = form.querySelector('#timeout');
 const formAddress = form.querySelector('#address');
 const roomsNumberSelect = document.querySelector('#room_number');
 const guestsNumberSelect = document.querySelector('#capacity');
+const formSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+const formSuccessNotice = formSuccessTemplate.cloneNode(true);
+const formErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+const formErrorNotice = formErrorTemplate.cloneNode(true);
+const formResetButton = form.querySelector('.ad-form__reset');
+const formFieldSets = form.querySelectorAll('fieldset');
+const main = document.querySelector('main');
 
 formTitleInput.addEventListener('input', validateTitleLength);
 formTitleInput.addEventListener('invalid', checkTitleExistence);
@@ -37,17 +44,19 @@ roomsNumberSelect.addEventListener('change', function () {
   getConformity(roomsNumberSelect, guestsNumberSelect);
 });
 
-const main = document.querySelector('main');
-const formSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-const formSuccessNotice = formSuccessTemplate.cloneNode(true);
-const formErrorTemplate = document.querySelector('#error').content.querySelector('.error');
-const formErrorNotice = formErrorTemplate.cloneNode(true);
-
 const throwFormSuccessNotice = (resetMainPinPosition) => { // вывод сообщения об успешной отправке формы
   main.appendChild(formSuccessNotice);
 
   document.addEventListener('click', () => {
     if (main.contains(formSuccessNotice)) {
+      main.removeChild(formSuccessNotice);
+      form.reset();
+      resetMainPinPosition();
+    }
+  });
+
+  document.addEventListener('keydown', function (evtKeydown) { // закрытие сообщения по нажатию esc
+    if (evtKeydown.key === 'Escape' && main.contains(formSuccessNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
       main.removeChild(formSuccessNotice);
       form.reset();
       resetMainPinPosition();
@@ -73,14 +82,17 @@ const throwFormErrorNotice = (errorMessage) => { // вывод сообщени�
       main.removeChild(formErrorNotice);
     }
   });
+
+  document.addEventListener('keydown', function (evtKeydown) { // закрытие сообщения по нажатию esc
+    if (evtKeydown.key === 'Escape' && main.contains(formErrorNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
+      main.removeChild(formErrorNotice);
+    }
+  });
 };
 
 export const fillFormAddress = (latitude, longitude) => {
   formAddress.value = `${latitude}, ${longitude}`; // передача начальных координат главной метки в поле адреса
 };
-
-//const form = document.querySelector('.ad-form');
-const formFieldSets = form.querySelectorAll('fieldset');
 
 export const switchFormActivation = (deactivator) => {
   if (deactivator) {
@@ -88,10 +100,14 @@ export const switchFormActivation = (deactivator) => {
 
   } else {
     form.classList.remove('ad-form--disabled');
-  // filterForm.classList.remove('map__filters--disabled');
   }
 
   formFieldSets.forEach((fieldSet) => { // все поля формы делаются неактивными deactivator = true
     fieldSet.disabled = deactivator;
   });
 };
+
+formAddress.readOnly = true; // делаем поле адреса только для чтения
+makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureSelector); // синхронизация времён въезда и выезда
+
+export {form, formTitleInput, formHousingTypeSelector, formPriceInput, formResetButton};

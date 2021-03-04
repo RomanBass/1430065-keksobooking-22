@@ -100,3 +100,5 @@ const renderPins = (estateObjects) => { // отрисовка меток, кро
 }
 
 getData(renderPins, showErrorMessage); // отрисовка пинов по данным с сервера или сообщения об ошибке
+
+export {TokyoCenterView};

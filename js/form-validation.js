@@ -1,24 +1,11 @@
+import {formTitleInput, formPriceInput} from './form.js';
+
 const TITLE_MIN_LENGTH = 30;
 const TITLE_MAX_LENGTH = 100;
 const MAX_PRICE = 1000000;
-const formTitleInput = document.querySelector('#title');
-const form = document.querySelector('.ad-form');
-//const formHousingTypeSelector = form.querySelector('#type');
-const formPriceInput = form.querySelector('#price');
-const formCheckEntrySelector = form.querySelector('#timein');
-const formCheckDepartureSelector = form.querySelector('#timeout');
-//const formCheckEntryOptions = form.querySelectorAll('#timein option');
-//const formCheckDepartureOptions = form.querySelectorAll('#timeout option');
-//const formFieldSets = form.querySelectorAll('fieldset');
-const formAddress = form.querySelector('#address');
-//const roomsNumberSelect = document.querySelector('#room_number');
-//const guestsNumberSelect = document.querySelector('#capacity');
-
 
 let minPrice = 1000;
 let estateObjectType = 'Квартира';
-
-formAddress.readOnly = true; // делаем поле адреса только для чтения
 
 export const validateTitleLength = () => { // функция валидации длины заголовка при его введении
   const valueLength = formTitleInput.value.length;
@@ -81,11 +68,9 @@ export const checkPriceExistence = () => {  // валидация наличия
   }
 };
 
-
 export const makeSelectorsDependent = (firstSelector, secondSelector) => { // синхронизация двух селекторов
   secondSelector.value = firstSelector.value;
 };
-
 
 export const getConformity = (roomsNumber, guestsNumber) => {
   if (roomsNumber.value === '100' && guestsNumber.value !== '0') {
@@ -99,5 +84,3 @@ export const getConformity = (roomsNumber, guestsNumber) => {
   }
   guestsNumber.reportValidity();
 };
-
-makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureSelector); // синхронизация времён въезда и выезда
