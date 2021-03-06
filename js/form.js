@@ -1,6 +1,7 @@
 import {validateTitleLength, checkTitleExistence, checkPriceValidity, changeValidPriceRange, checkPriceExistence,
   makeSelectorsDependent, getConformity} from './form-validation.js';
 import {sendData} from './server.js';
+import {TokyoCenterView} from './util.js';
 
 const form = document.querySelector('.ad-form');
 const formTitleInput = document.querySelector('#title');
@@ -44,33 +45,41 @@ roomsNumberSelect.addEventListener('change', function () {
   getConformity(roomsNumberSelect, guestsNumberSelect);
 });
 
-const throwFormSuccessNotice = (resetMainPinPosition) => { // вывод сообщения об успешной отправке формы
-  main.appendChild(formSuccessNotice);
-
-  document.addEventListener('click', () => {
-    if (main.contains(formSuccessNotice)) {
-      main.removeChild(formSuccessNotice);
-      form.reset();
-      resetMainPinPosition();
-    }
-  });
-
-  document.addEventListener('keydown', function (evtKeydown) { // закрытие сообщения по нажатию esc
-    if (evtKeydown.key === 'Escape' && main.contains(formSuccessNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
-      main.removeChild(formSuccessNotice);
-      form.reset();
-      resetMainPinPosition();
-    }
-  });
-};
-
 export const setFormSubmitHandler = (callback) => {
+  const throwFormSuccessNotice = () => { // вывод сообщения об успешной отправке формы
+    main.appendChild(formSuccessNotice);
+
+    document.addEventListener('click', () => {
+      if (main.contains(formSuccessNotice)) {
+        main.removeChild(formSuccessNotice);
+        form.reset();
+        callback();
+      }
+    });
+
+    document.addEventListener('keydown', function (evtKeydown) { // закрытие сообщения по нажатию esc
+      if (evtKeydown.key === 'Escape' && main.contains(formSuccessNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
+        main.removeChild(formSuccessNotice);
+        form.reset();
+        callback();
+      }
+    });
+  };
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
-    sendData(() => {throwFormSuccessNotice(callback)}, throwFormErrorNotice, formData); // отправка данных формы на сервер
+    sendData(throwFormSuccessNotice, throwFormErrorNotice, formData); // отправка данных формы на сервер
   });
 };
+
+export const setFormResetHandler = (callback) => {
+  formResetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    form.reset();
+    callback();
+    fillFormAddress(TokyoCenterView.LATITUDE, TokyoCenterView.LONGITUDE);
+  });
+}
 
 const throwFormErrorNotice = (errorMessage) => { // вывод сообщения об ошибке при формы
   main.appendChild(formErrorNotice);

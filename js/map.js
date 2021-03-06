@@ -1,16 +1,10 @@
 /* global L:readonly */
 import {switchPageActivation} from './page-activation.js';
-import {showErrorMessage} from './util.js';
+import {TokyoCenterView} from './util.js';
 import {renderCard} from './card.js';
-import {getData} from './server.js';
 import {fillFormAddress} from './form.js';
 
-const ESTATE_OBJECTS_NUMBER = 10;
-const TokyoCenterView = { // координаты центра Токио и начальный масштаб карты
-  LATITUDE: 35.65858,
-  LONGITUDE: 139.74544,
-  ZOOM: 9,
-}
+const ESTATE_OBJECTS_NUMBER = 5;
 
 const map = L.map('map-canvas')
   .on('load', () => {
@@ -99,6 +93,4 @@ const renderPins = (estateObjects) => { // отрисовка меток, кро
   }
 }
 
-getData(renderPins, showErrorMessage); // отрисовка пинов по данным с сервера или сообщения об ошибке
-
-export {TokyoCenterView};
+export {TokyoCenterView, renderPins, map};
