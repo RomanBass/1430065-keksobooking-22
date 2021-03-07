@@ -12,4 +12,10 @@ const showErrorMessage = (message) => {
   document.body.insertAdjacentElement('afterbegin', node);
 };
 
-export {showErrorMessage};
+const TokyoCenterView = { // координаты центра Токио и начальный масштаб карты
+  LATITUDE: 35.65858,
+  LONGITUDE: 139.74544,
+  ZOOM: 9,
+}
+
+export {showErrorMessage, TokyoCenterView};
