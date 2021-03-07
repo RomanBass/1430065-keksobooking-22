@@ -4,7 +4,7 @@ import {TokyoCenterView} from './util.js';
 import {renderCard} from './card.js';
 import {fillFormAddress} from './form.js';
 
-const ESTATE_OBJECTS_NUMBER = 5;
+const ESTATE_OBJECTS_NUMBER = 10;
 
 const map = L.map('map-canvas')
   .on('load', () => {
