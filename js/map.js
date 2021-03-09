@@ -71,8 +71,16 @@ const PinIcon = L.icon({ // создание иконок для меток, к�
   iconAnchor: [20, 40],
 });
 
+const pinsLayerGroup = L.layerGroup() // создаём группу слоёв, куда будут добавляться все маркеры, кроме основного
+  .addTo(map);                      // добавляем группу слоёв на карту
+
 const renderPins = (estateObjects) => { // отрисовка меток, кроме главной
   const cyclesNumber = estateObjects.length <= ESTATE_OBJECTS_NUMBER ? estateObjects.length : ESTATE_OBJECTS_NUMBER; // считается количество итераций, на случай, если с сервера придёт данных меньше, чем количество показываемых объектов
+
+  if (pinsLayerGroup.getLayers().length) { // если группа слоев содержит не пустой массив, то...
+    pinsLayerGroup.clearLayers(); // затираются все ранее созданные метки
+  }
+
   for(let i = 0; i < cyclesNumber; i++) {
 
     const PinMarker = L.marker(
@@ -86,10 +94,12 @@ const renderPins = (estateObjects) => { // отрисовка меток, кро
     );
 
     PinMarker
-      .addTo(map)
-      .bindPopup( // вызов попапа карточки объекта
+      .bindPopup(    // вызов попапа карточки объекта
         renderCard(estateObjects[i]),
       );
+
+    pinsLayerGroup
+      .addLayer(PinMarker);
   }
 }
 

@@ -15,11 +15,13 @@ const switchFiltersActivation = (deactivator) => { // деактивируетс
 
 const changeFiltersState = (cb, dataToFilter) => { // отрисовка меток с учётом применения фильтров
   filterForm.addEventListener('change', () => {
-    const markerPane = document.querySelector('.leaflet-marker-pane'); // див с метками
-    const markers = markerPane.querySelectorAll('.leaflet-marker-icon:not(.leaflet-marker-draggable)'); // все метки, кроме главной
-    markers.forEach(marker => markerPane.removeChild(marker)); // удаление текущих меток, кроме главной
 
-    const housingType = document.querySelector('#housing-type option:checked').value; // текущий параметр типа жилья из селектора
+    const housingType = document.querySelector('#housing-type option:checked').value; // текущий параметр типа жилья
+    const housingPrice = document.querySelector('#housing-price option:checked').value; // текущий параметр диапазона цен из селектора
+    const housingRooms = document.querySelector('#housing-rooms option:checked').value; // текущий параметр количества комнат
+    const housingGuests = document.querySelector('#housing-guests option:checked').value; // текущий параметр количества гостей
+    const facilitiesArray = document.querySelectorAll('#housing-features input'); // массив опций удобств
+
     const housingTypeFilteredOffers = dataToFilter.filter((estateObject) => { // фильтрация данных с сервера по типу жилья
       if (housingType === 'any') {
         return dataToFilter;
@@ -28,13 +30,54 @@ const changeFiltersState = (cb, dataToFilter) => { // отрисовка мет�
       }
     });
 
-    const popupPane = document.querySelector('.leaflet-popup'); // див с балунами
-    if (popupPane !== null) { // если див с балунами не пустой (проверка, чтобы не было ошибки с отcутствующим innerHTML)
-      popupPane.innerHTML = '';  // вычищаем балун
+    const housingPriceFilteredOffers = housingTypeFilteredOffers.filter(function (estateObject) { // фильтрация данных из предыдущего фильтра по диапазону цены
+      let priceRange;
+      switch (housingPrice) {
+        case 'any':
+          priceRange = housingTypeFilteredOffers;
+          break;
+        case 'low':
+          priceRange = (estateObject.offer.price <= 10000);
+          break;
+        case 'middle':
+          priceRange = (estateObject.offer.price > 10000 && estateObject.offer.price < 50000);
+          break;
+        case 'high':
+          priceRange = (estateObject.offer.price >= 50000);
+      }
+      return priceRange;
+    });
+
+    const housingRoomsFilteredOffers = housingPriceFilteredOffers.filter(function (estateObject) { // фильтрация данных из предыдущего фильтра по количеству комнат
+      if (housingRooms === 'any') {
+        return housingPriceFilteredOffers;
+      } else {
+        return estateObject.offer.rooms === parseInt(housingRooms, 10); // преобразуем строку в целое число, т.к. value содержит строковый параметр
+      }
+    });
+
+    const housingGuestsFilteredOffers = housingRoomsFilteredOffers.filter(function (estateObject) { // фильтрация данных из предыдущего фильтра по количеству гостей
+      if (housingGuests === 'any') {
+        return housingRoomsFilteredOffers;
+      } else {
+        return estateObject.offer.guests === parseInt(housingGuests, 10); // преобразуем строку в целое число, т.к. value содержит строковый параметр
+      }
+    });
+
+    let facilitiesFilteredOffers = housingGuestsFilteredOffers; // создаём массив предложений, который далее будем фильтровать по критерию удобств
+
+    for (let i = 0; i < facilitiesArray.length; i++) { // цикл проходит по всем элементам массива опций удобств
+      if (facilitiesArray[i].checked) { // если удобство i чекнуто, то...
+        facilitiesFilteredOffers = facilitiesFilteredOffers.filter(function (estateObject) { // фильтруем массив по удобству i
+          return estateObject.offer.features.includes(facilitiesArray[i].value);
+        });
+      }
     }
 
-    cb(housingTypeFilteredOffers);
+    const filteredOffers = facilitiesFilteredOffers; // создаётся массив окончательно отфильтрованных предложений
+
+    cb(filteredOffers);
   });
 };
 
-export {filterForm, filters, switchFiltersActivation, changeFiltersState};
+export {switchFiltersActivation, changeFiltersState};
