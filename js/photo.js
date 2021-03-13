@@ -11,7 +11,7 @@ avatarFileChooser.addEventListener('change', function () {
   const file = avatarFileChooser.files[0];
   const fileName = file.name.toLowerCase();
 
-  const matches = FILE_TYPES.some(function (ending) {
+  const matches = FILE_TYPES.some((ending) => {
     return fileName.endsWith(ending);
   });
 
@@ -31,7 +31,7 @@ housingFileChooser.addEventListener('change', function () {
   const file = housingFileChooser.files[0];
   const fileName = file.name.toLowerCase();
 
-  const matches = FILE_TYPES.some(function (ending) {
+  const matches = FILE_TYPES.some((ending) => {
     return fileName.endsWith(ending);
   });
 
