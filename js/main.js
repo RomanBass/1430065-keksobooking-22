@@ -6,6 +6,7 @@ import './page-activation.js';
 import {changeFiltersState} from './filter.js';
 import {resetMainPinPosition, renderPins} from './map.js';
 import {getData} from './server.js';
+import './photo.js';
 
 const FILTER_SWITCH_DELAY = 500; // задержка для дебаунса фильтров
 
