@@ -5,6 +5,7 @@
 *.pdf
 *.psd
 *.sublime*
+build
 build/js/main.bundle.js
 build/js/main.bundle.js.map
 node_modules/
