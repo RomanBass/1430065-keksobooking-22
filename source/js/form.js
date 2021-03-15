@@ -82,8 +82,10 @@ export const setFormResetHandler = (callback) => {
 }
 
 const throwFormErrorNotice = (errorMessage) => { // вывод сообщения об ошибке при формы
-  main.appendChild(formErrorNotice);
+
   const formErrorNoticeText = document.querySelector('.error__message'); // извлекаем параграф с сообщением
+
+  main.appendChild(formErrorNotice); // добавление в блок main сообщения об ошибке
   formErrorNoticeText.textContent = errorMessage; // корректируем сообщение
 
   document.addEventListener('click', () => {
