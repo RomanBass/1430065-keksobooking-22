@@ -1,10 +1,10 @@
-import {switchFiltersActivation} from './filter.js';
-import {switchFormActivation} from './form.js';
+import {filtersActivationHandler} from './filter.js';
+import {formActivationHandler} from './form.js';
 
-const switchPageActivation = (deactivator) => { // функция активации и деактивации страницы, при deactivator = true деактивирует, при deactivator = false активирует
-  switchFormActivation (deactivator);
-  switchFiltersActivation(deactivator);
+const pageActivationHandler = (deactivator) => { // функция активации и деактивации страницы, при deactivator = true деактивирует, при deactivator = false активирует
+  formActivationHandler (deactivator);
+  filtersActivationHandler(deactivator);
 };
 
-switchPageActivation(true);
-export {switchPageActivation};
+pageActivationHandler(true);
+export {pageActivationHandler};

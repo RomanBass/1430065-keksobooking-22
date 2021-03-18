@@ -6,7 +6,7 @@ const avatarPreview = form.querySelector('.ad-form-header__preview img');
 const housingFileChooser = form.querySelector('.ad-form__upload input[type=file]');
 const housingPreviewBlock = form.querySelector('.ad-form__photo');
 
-avatarFileChooser.addEventListener('change', function () {
+avatarFileChooser.addEventListener('change', () => {
 
   const file = avatarFileChooser.files[0];
   const fileName = file.name.toLowerCase();
@@ -18,7 +18,7 @@ avatarFileChooser.addEventListener('change', function () {
   if (matches) {
     const reader = new FileReader();
 
-    reader.addEventListener('load', function () {
+    reader.addEventListener('load', () => {
       avatarPreview.src = reader.result;
     });
     reader.readAsDataURL(file);
@@ -26,7 +26,7 @@ avatarFileChooser.addEventListener('change', function () {
 
 });
 
-housingFileChooser.addEventListener('change', function () {
+housingFileChooser.addEventListener('change', () => {
 
   const file = housingFileChooser.files[0];
   const fileName = file.name.toLowerCase();
@@ -38,7 +38,7 @@ housingFileChooser.addEventListener('change', function () {
   if (matches) {
     let reader = new FileReader();
 
-    reader.addEventListener('load', function () {
+    reader.addEventListener('load', () => {
       housingPreviewBlock.innerHTML = `<img src="${reader.result}" alt="Фото жилья" width="70" height="70"></img>`;
     });
     reader.readAsDataURL(file);

@@ -1,7 +1,7 @@
 const filterForm = document.querySelector('.map__filters');
 const filters = filterForm.querySelectorAll('select, fieldset');
 
-const switchFiltersActivation = (deactivator) => { // деактивируется форма фильтров deactivator = true
+const filtersActivationHandler = (deactivator) => { // деактивируется форма фильтров deactivator = true
   if (deactivator) {
     filterForm.classList.add('map__filters--disabled');
   } else {
@@ -13,53 +13,54 @@ const switchFiltersActivation = (deactivator) => { // деактивируетс
   });
 }
 
-const checkHousingType = (estateObject) => { // проверка совпадения estateObject-та с выбранным типом жилья
+const housingTypeHandler = (estateObject) => { // проверка совпадения estateObject-та с выбранным типом жилья
   const housingType = document.querySelector('#housing-type option:checked').value; // текущий параметр типа жилья
-  if (housingType === estateObject.offer.type || housingType === 'any') {
-    return true;
-  } else {
-    return false;
-  }
+  return housingType === estateObject.offer.type || housingType === 'any';
 };
 
-const checkPriceRange = (estateObject) => { // проверка попадания estateObject-та в выбранный диапазон цен
+const priceRangeHandler = (estateObject) => { // проверка попадания estateObject-та в выбранный диапазон цен
+
+  const PriceRangeName = {
+    ANY: 'any',
+    LOW: 'low',
+    MIDDLE: 'middle',
+    HIGH: 'high',
+  }
+
+  const PriceRangeLimit = {
+    LOW: 10000,
+    HIGH: 50000,
+  }
+
   const housingPrice = document.querySelector('#housing-price option:checked').value; // текущий параметр диапазона цен из селектора
   let indicator = false;
   switch (housingPrice) {
-    case 'any':
+    case PriceRangeName.ANY:
       indicator = true;
       break;
-    case 'low':
-      indicator = (estateObject.offer.price <= 10000);
+    case PriceRangeName.LOW:
+      indicator = (estateObject.offer.price <= PriceRangeLimit.LOW);
       break;
-    case 'middle':
-      indicator = (estateObject.offer.price > 10000 && estateObject.offer.price < 50000);
+    case PriceRangeName.MIDDLE:
+      indicator = (estateObject.offer.price > PriceRangeLimit.LOW && estateObject.offer.price < PriceRangeLimit.HIGH);
       break;
-    case 'high':
-      indicator = (estateObject.offer.price >= 50000);
+    case PriceRangeName.HIGH:
+      indicator = (estateObject.offer.price >= PriceRangeLimit.HIGH);
   }
   return indicator;
 };
 
-const checkHousingRooms = (estateObject) => { // проверка в estateObject-те выбранного количества комнат
+const housingRoomsHandler = (estateObject) => { // проверка в estateObject-те выбранного количества комнат
   const housingRooms = document.querySelector('#housing-rooms option:checked').value; // текущий параметр количества комнат
-  if (estateObject.offer.rooms === parseInt(housingRooms, 10) || housingRooms === 'any') {
-    return true;
-  } else {
-    return false;
-  }
+  return estateObject.offer.rooms === parseInt(housingRooms, 10) || housingRooms === 'any';
 };
 
-const checkHousingGuests = (estateObject) => { // проверка в estateObject-те выбранного количества гостей
+const housingGuestsHandler = (estateObject) => { // проверка в estateObject-те выбранного количества гостей
   const housingGuests = document.querySelector('#housing-guests option:checked').value; // текущий параметр количества гостей
-  if (estateObject.offer.guests === parseInt(housingGuests, 10) || housingGuests === 'any') {
-    return true;
-  } else {
-    return false;
-  }
+  return estateObject.offer.guests === parseInt(housingGuests, 10) || housingGuests === 'any';
 };
 
-const checkFacilities = (estateObject) => { // проверка наличия в estateObject-те выбранных удобств
+const facilitiesHandler = (estateObject) => { // проверка наличия в estateObject-те выбранных удобств
   const facilitiesArray = document.querySelectorAll('#housing-features input'); // массив опций удобств
   let indicator = true;
   for (let i = 0; i < facilitiesArray.length; i++) { // цикл проходит по всем элементам массива опций удобств
@@ -71,17 +72,17 @@ const checkFacilities = (estateObject) => { // проверка наличия �
   return indicator;
 };
 
-const changeFiltersState = (cb, dataToFilter) => { // фильтрация данных с сервера
+const filtersStateHandler = (cb, dataToFilter) => { // фильтрация данных с сервера
   filterForm.addEventListener('change', () => {
     const filteredOffers = dataToFilter.filter((estateObject) => {
-      return checkHousingType(estateObject) &&
-             checkPriceRange(estateObject) &&
-             checkHousingRooms(estateObject) &&
-             checkHousingGuests(estateObject) &&
-             checkFacilities(estateObject);
+      return housingTypeHandler(estateObject) &&
+             priceRangeHandler(estateObject) &&
+             housingRoomsHandler(estateObject) &&
+             housingGuestsHandler(estateObject) &&
+             facilitiesHandler(estateObject);
     });
     cb(filteredOffers);
   });
 };
 
-export {switchFiltersActivation, changeFiltersState};
+export {filtersActivationHandler, filtersStateHandler};

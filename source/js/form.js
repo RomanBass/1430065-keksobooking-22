@@ -1,52 +1,52 @@
-import {validateTitleLength, checkTitleExistence, checkPriceValidity, changeValidPriceRange, checkPriceExistence,
-  makeSelectorsDependent, getConformity} from './form-validation.js';
+import {titleLengthHandler, titleExistenceHandler, priceValidityHandler, priceRangeHandler, priceExistenceHandler,
+  selectorsSynchronizationHandler, roomsAndGuestsHandler} from './form-validation.js';
 import {sendData} from './server.js';
 import {TokyoCenterView} from './util.js';
 
-const form = document.querySelector('.ad-form');
-const formTitleInput = document.querySelector('#title');
-const formHousingTypeSelector = form.querySelector('#type');
-const formPriceInput = form.querySelector('#price');
-const formCheckEntrySelector = form.querySelector('#timein');
-const formCheckDepartureSelector = form.querySelector('#timeout');
-const formAddress = form.querySelector('#address');
-const roomsNumberSelect = document.querySelector('#room_number');
-const guestsNumberSelect = document.querySelector('#capacity');
+const main = document.querySelector('main');
 const formSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-const formSuccessNotice = formSuccessTemplate.cloneNode(true);
 const formErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+const formSuccessNotice = formSuccessTemplate.cloneNode(true);
 const formErrorNotice = formErrorTemplate.cloneNode(true);
+const form = document.querySelector('.ad-form');
+const titleInput = form.querySelector('#title');
+const housingTypeSelector = form.querySelector('#type');
+const priceInput = form.querySelector('#price');
+const entrySelector = form.querySelector('#timein');
+const departureSelector = form.querySelector('#timeout');
+const addressInput = form.querySelector('#address');
+const roomsNumberSelector = form.querySelector('#room_number');
+const guestsNumberSelector = form.querySelector('#capacity');
 const formResetButton = form.querySelector('.ad-form__reset');
 const formFieldSets = form.querySelectorAll('fieldset');
-const main = document.querySelector('main');
 
-formTitleInput.addEventListener('input', validateTitleLength);
-formTitleInput.addEventListener('invalid', checkTitleExistence);
-formHousingTypeSelector.addEventListener('change', changeValidPriceRange);
+titleInput.addEventListener('input', titleLengthHandler);
+titleInput.addEventListener('invalid', titleExistenceHandler);
+housingTypeSelector.addEventListener('change', priceRangeHandler);
 
-formPriceInput.addEventListener('input', () => {
-  checkPriceValidity(); // валидация величины цены
+priceInput.addEventListener('input', () => {
+  priceValidityHandler(); // валидация величины цены
 });
 
-formPriceInput.addEventListener('invalid', checkPriceExistence);
-formCheckDepartureSelector.addEventListener('change', () => {
-  makeSelectorsDependent(formCheckDepartureSelector, formCheckEntrySelector);
+priceInput.addEventListener('invalid', priceExistenceHandler);
+departureSelector.addEventListener('change', () => {
+  selectorsSynchronizationHandler(departureSelector, entrySelector);
 });
 
-formCheckEntrySelector.addEventListener('change', () => {
-  makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureSelector);
+entrySelector.addEventListener('change', () => {
+  selectorsSynchronizationHandler(entrySelector, departureSelector);
 });
 
-getConformity(roomsNumberSelect, guestsNumberSelect);
-guestsNumberSelect.addEventListener('change', function () {
-  getConformity(roomsNumberSelect, guestsNumberSelect);
+roomsAndGuestsHandler(roomsNumberSelector, guestsNumberSelector);
+guestsNumberSelector.addEventListener('change', () => {
+  roomsAndGuestsHandler(roomsNumberSelector, guestsNumberSelector);
 });
-roomsNumberSelect.addEventListener('change', function () {
-  getConformity(roomsNumberSelect, guestsNumberSelect);
+roomsNumberSelector.addEventListener('change', () => {
+  roomsAndGuestsHandler(roomsNumberSelector, guestsNumberSelector);
 });
 
-export const setFormSubmitHandler = (callback) => {
-  const throwFormSuccessNotice = () => { // вывод сообщения об успешной отправке формы
+export const formSubmitHandler = (callback) => {
+  const formSuccessNoticeHandler = () => { // вывод сообщения об успешной отправке формы
     main.appendChild(formSuccessNotice);
 
     document.addEventListener('click', () => {
@@ -57,7 +57,7 @@ export const setFormSubmitHandler = (callback) => {
       }
     });
 
-    document.addEventListener('keydown', function (evtKeydown) { // закрытие сообщения по нажатию esc
+    document.addEventListener('keydown', (evtKeydown) => { // закрытие сообщения по нажатию esc
       if (evtKeydown.key === 'Escape' && main.contains(formSuccessNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
         main.removeChild(formSuccessNotice);
         form.reset();
@@ -68,20 +68,20 @@ export const setFormSubmitHandler = (callback) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
-    sendData(throwFormSuccessNotice, throwFormErrorNotice, formData); // отправка данных формы на сервер
+    sendData(formSuccessNoticeHandler, formErrorNoticeHandler, formData); // отправка данных формы на сервер
   });
 };
 
-export const setFormResetHandler = (callback) => {
+export const formResetHandler = (callback) => {
   formResetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     form.reset();
     callback();
-    fillFormAddress(TokyoCenterView.LATITUDE, TokyoCenterView.LONGITUDE);
+    addressHandler(TokyoCenterView.LATITUDE, TokyoCenterView.LONGITUDE);
   });
 }
 
-const throwFormErrorNotice = (errorMessage) => { // вывод сообщения об ошибке при формы
+const formErrorNoticeHandler = (errorMessage) => { // вывод сообщения об ошибке при формы
 
   const formErrorNoticeText = document.querySelector('.error__message'); // извлекаем параграф с сообщением
 
@@ -94,18 +94,18 @@ const throwFormErrorNotice = (errorMessage) => { // вывод сообщени�
     }
   });
 
-  document.addEventListener('keydown', function (evtKeydown) { // закрытие сообщения по нажатию esc
+  document.addEventListener('keydown', (evtKeydown) => { // закрытие сообщения по нажатию esc
     if (evtKeydown.key === 'Escape' && main.contains(formErrorNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
       main.removeChild(formErrorNotice);
     }
   });
 };
 
-export const fillFormAddress = (latitude, longitude) => {
-  formAddress.value = `${latitude}, ${longitude}`; // передача начальных координат главной метки в поле адреса
+export const addressHandler = (latitude, longitude) => {
+  addressInput.value = `${latitude}, ${longitude}`; // передача начальных координат главной метки в поле адреса
 };
 
-export const switchFormActivation = (deactivator) => {
+export const formActivationHandler = (deactivator) => {
   if (deactivator) {
     form.classList.add('ad-form--disabled');
 
@@ -118,7 +118,7 @@ export const switchFormActivation = (deactivator) => {
   });
 };
 
-formAddress.readOnly = true; // делаем поле адреса только для чтения
-makeSelectorsDependent(formCheckEntrySelector, formCheckDepartureSelector); // синхронизация времён въезда и выезда
+addressInput.readOnly = true; // делаем поле адреса только для чтения
+selectorsSynchronizationHandler(entrySelector, departureSelector); // синхронизация времён въезда и выезда
 
-export {form, formTitleInput, formHousingTypeSelector, formPriceInput, formResetButton};
+export {form, titleInput, housingTypeSelector, priceInput, formResetButton};

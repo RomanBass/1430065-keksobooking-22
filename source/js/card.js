@@ -2,6 +2,20 @@ const cardTemplate = document.querySelector('#card').content.querySelector('.pop
 
 const renderCard = (estateObject) => {
 
+  const ServerEstateObjectTypeValue = {
+    BUNGALOW: 'bungalow',
+    FLAT: 'flat',
+    HOUSE: 'house',
+    PALACE: 'palace',
+  }
+
+  const CardEstateObjectTypeText = {
+    BUNGALOW: 'Бунгало',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец',
+  }
+
   const newCard = cardTemplate.cloneNode(true);
   const possibleFeaturesList = newCard.querySelector('.popup__features');
   const featuresList = estateObject.offer.features;
@@ -17,17 +31,17 @@ const renderCard = (estateObject) => {
   newCard.querySelector('.popup__description').textContent = estateObject.offer.description;
 
   switch (estateObject.offer.type) {
-    case 'bungalow':
-      newCard.querySelector('.popup__type').textContent = 'Бунгало';
+    case ServerEstateObjectTypeValue.BUNGALOW:
+      newCard.querySelector('.popup__type').textContent = CardEstateObjectTypeText.BUNGALOW;
       break;
-    case 'flat':
-      newCard.querySelector('.popup__type').textContent = 'Квартира';
+    case ServerEstateObjectTypeValue.FLAT:
+      newCard.querySelector('.popup__type').textContent = CardEstateObjectTypeText.FLAT;
       break;
-    case 'house':
-      newCard.querySelector('.popup__type').textContent = 'Дом';
+    case ServerEstateObjectTypeValue.HOUSE:
+      newCard.querySelector('.popup__type').textContent = CardEstateObjectTypeText.HOUSE;
       break;
-    case 'palace':
-      newCard.querySelector('.popup__type').textContent = 'Дворец';
+    case ServerEstateObjectTypeValue.PALACE:
+      newCard.querySelector('.popup__type').textContent = CardEstateObjectTypeText.PALACE;
       break;
   }
 

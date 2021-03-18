@@ -1,4 +1,4 @@
-import {formTitleInput, formPriceInput} from './form.js';
+import {titleInput, priceInput} from './form.js';
 
 const TITLE_MIN_LENGTH = 30;
 const TITLE_MAX_LENGTH = 100;
@@ -7,72 +7,93 @@ const MAX_PRICE = 1000000;
 let minPrice = 1000;
 let estateObjectType = 'Квартира';
 
-export const validateTitleLength = () => { // функция валидации длины заголовка при его введении
-  const valueLength = formTitleInput.value.length;
+export const titleLengthHandler = () => { // функция валидации длины заголовка при его введении
+  const valueLength = titleInput.value.length;
 
   if (valueLength < TITLE_MIN_LENGTH) {
-    formTitleInput.setCustomValidity('Добавьте ' + (TITLE_MIN_LENGTH - valueLength) + ' симв.');
+    titleInput.setCustomValidity('Добавьте ' + (TITLE_MIN_LENGTH - valueLength) + ' симв.');
   } else if (valueLength > TITLE_MAX_LENGTH) {
-    formTitleInput.setCustomValidity('Удалите ' + (valueLength - TITLE_MAX_LENGTH) + ' симв.');
+    titleInput.setCustomValidity('Удалите ' + (valueLength - TITLE_MAX_LENGTH) + ' симв.');
   } else {
-    formTitleInput.setCustomValidity('');
+    titleInput.setCustomValidity('');
   }
 
-  formTitleInput.reportValidity();
+  titleInput.reportValidity();
 };
 
-export const checkTitleExistence = () => { // функция валидации наличия заголовка
-  if (formTitleInput.validity.valueMissing) {
-    formTitleInput.setCustomValidity('Без заголовка объявление не публикуется');
+export const titleExistenceHandler = () => { // функция валидации наличия заголовка
+  if (titleInput.validity.valueMissing) {
+    titleInput.setCustomValidity('Без заголовка объявление не публикуется');
   }
 }
 
-export const checkPriceValidity = () => { // функция валидации величины цены
-  const price = formPriceInput.value;
+export const priceValidityHandler = () => { // функция валидации величины цены
+  const price = priceInput.value;
   if (price > MAX_PRICE) {
-    formPriceInput.setCustomValidity('Больше миллиона цена быть не может');
+    priceInput.setCustomValidity('Больше миллиона цена быть не может');
   } else if (price < minPrice) {
-    formPriceInput.setCustomValidity(`Меньше ${minPrice} цены на объект "${estateObjectType}" быть не может`);
+    priceInput.setCustomValidity(`Меньше ${minPrice} цены на объект "${estateObjectType}" быть не может`);
   } else {
-    formPriceInput.setCustomValidity('');
+    priceInput.setCustomValidity('');
   }
-  formPriceInput.reportValidity();
+  priceInput.reportValidity();
 };
 
-export const changeValidPriceRange = (evt) => { // изменение минимальной цены при изменении типа жилья
+export const priceRangeHandler = (evt) => { // изменение минимальной цены при изменении типа жилья
+  const FormEstateObjectTypeValue = {
+    BUNGALOW: 'bungalow',
+    FLAT: 'flat',
+    HOUSE: 'house',
+    PALACE: 'palace',
+  }
+
+  const FormEstateObjectTypeText = {
+    BUNGALOW: 'Бунгало',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец',
+  }
+
+  const MinPrice = {
+    BUNGALOW: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000,
+  }
+
   switch (evt.target.value) {
-    case 'bungalow':
-      minPrice = 0;
-      estateObjectType = 'Бунгало';
+    case FormEstateObjectTypeValue.BUNGALOW:
+      minPrice = MinPrice.BUNGALOW;
+      estateObjectType = FormEstateObjectTypeText.BUNGALOW;
       break;
-    case 'flat':
-      minPrice = 1000;
-      estateObjectType = 'Квартира';
+    case FormEstateObjectTypeValue.FLAT:
+      minPrice = MinPrice.FLAT;
+      estateObjectType = FormEstateObjectTypeText.FLAT;
       break;
-    case 'house':
-      minPrice = 5000;
-      estateObjectType = 'Дом';
+    case FormEstateObjectTypeValue.HOUSE:
+      minPrice = MinPrice.HOUSE;
+      estateObjectType = FormEstateObjectTypeText.HOUSE;
       break;
-    case 'palace':
-      minPrice = 10000;
-      estateObjectType = 'Дворец';
+    case FormEstateObjectTypeValue.PALACE:
+      minPrice = MinPrice.PALACE;
+      estateObjectType = FormEstateObjectTypeText.PALACE;
       break;
   }
-  formPriceInput.placeholder = minPrice;
-  checkPriceValidity(minPrice, estateObjectType); // валидация величины цены
+  priceInput.placeholder = minPrice;
+  priceValidityHandler(minPrice, estateObjectType); // валидация величины цены
 };
 
-export const checkPriceExistence = () => {  // валидация наличия цены
-  if (formPriceInput.validity.valueMissing) {
-    formPriceInput.setCustomValidity('Без указания цены объявление не публикуется');
+export const priceExistenceHandler = () => {  // валидация наличия цены
+  if (priceInput.validity.valueMissing) {
+    priceInput.setCustomValidity('Без указания цены объявление не публикуется');
   }
 };
 
-export const makeSelectorsDependent = (firstSelector, secondSelector) => { // синхронизация двух селекторов
+export const selectorsSynchronizationHandler = (firstSelector, secondSelector) => { // синхронизация двух селекторов
   secondSelector.value = firstSelector.value;
 };
 
-export const getConformity = (roomsNumber, guestsNumber) => {
+export const roomsAndGuestsHandler = (roomsNumber, guestsNumber) => {
   if (roomsNumber.value === '100' && guestsNumber.value !== '0') {
     guestsNumber.setCustomValidity('Выбранное помещение не предназначено для проживания гостей');
   } else if (roomsNumber.value !== '100' && guestsNumber.value === '0') {
