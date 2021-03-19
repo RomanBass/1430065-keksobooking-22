@@ -72,7 +72,7 @@ const facilitiesChangeHandler = (estateObject) => { // проверка нали
   return indicator;
 };
 
-const filtersStateHandler = (cb, dataToFilter) => { // фильтрация данных с сервера
+const filterEstateObjects = (cb, dataToFilter) => { // фильтрует данных с сервера
   filterForm.addEventListener('change', () => {
     const filteredOffers = dataToFilter.filter((estateObject) => {
       return housingTypeChangeHandler(estateObject) &&
@@ -85,4 +85,4 @@ const filtersStateHandler = (cb, dataToFilter) => { // фильтрация да
   });
 };
 
-export {deactivateFilters, filtersStateHandler};
+export {deactivateFilters, filterEstateObjects};
