@@ -7,7 +7,7 @@ const MAX_PRICE = 1000000;
 let minPrice = 1000;
 let estateObjectType = 'Квартира';
 
-export const titleLengthHandler = () => { // функция валидации длины заголовка при его введении
+export const titleInputHandler = () => { // функция валидации длины заголовка при его введении
   const valueLength = titleInput.value.length;
 
   if (valueLength < TITLE_MIN_LENGTH) {
@@ -21,13 +21,13 @@ export const titleLengthHandler = () => { // функция валидации �
   titleInput.reportValidity();
 };
 
-export const titleExistenceHandler = () => { // функция валидации наличия заголовка
+export const titleInvalidHandler = () => { // функция валидации наличия заголовка
   if (titleInput.validity.valueMissing) {
     titleInput.setCustomValidity('Без заголовка объявление не публикуется');
   }
 }
 
-export const priceValidityHandler = () => { // функция валидации величины цены
+export const priceInputHandler = () => { // функция валидации величины цены
   const price = priceInput.value;
   if (price > MAX_PRICE) {
     priceInput.setCustomValidity('Больше миллиона цена быть не может');
@@ -39,7 +39,7 @@ export const priceValidityHandler = () => { // функция валидации
   priceInput.reportValidity();
 };
 
-export const priceRangeHandler = (evt) => { // изменение минимальной цены при изменении типа жилья
+export const priceRangeChangeHandler = (evt) => { // изменение минимальной цены при изменении типа жилья
   const FormEstateObjectTypeValue = {
     BUNGALOW: 'bungalow',
     FLAT: 'flat',
@@ -80,20 +80,20 @@ export const priceRangeHandler = (evt) => { // изменение минимал
       break;
   }
   priceInput.placeholder = minPrice;
-  priceValidityHandler(minPrice, estateObjectType); // валидация величины цены
+  priceInputHandler(minPrice, estateObjectType); // валидация величины цены
 };
 
-export const priceExistenceHandler = () => {  // валидация наличия цены
+export const priceInvalidHandler = () => {  // валидация наличия цены
   if (priceInput.validity.valueMissing) {
     priceInput.setCustomValidity('Без указания цены объявление не публикуется');
   }
 };
 
-export const selectorsSynchronizationHandler = (firstSelector, secondSelector) => { // синхронизация двух селекторов
+export const selectorsChangeHandler = (firstSelector, secondSelector) => { // синхронизация двух селекторов
   secondSelector.value = firstSelector.value;
 };
 
-export const roomsAndGuestsHandler = (roomsNumber, guestsNumber) => {
+export const roomsAndGuestsChangeHandler = (roomsNumber, guestsNumber) => {
   if (roomsNumber.value === '100' && guestsNumber.value !== '0') {
     guestsNumber.setCustomValidity('Выбранное помещение не предназначено для проживания гостей');
   } else if (roomsNumber.value !== '100' && guestsNumber.value === '0') {

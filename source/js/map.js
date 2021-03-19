@@ -1,14 +1,14 @@
 /* global L:readonly */
-import {pageActivationHandler} from './page-activation.js';
+import {deactivatePage} from './page-activation.js';
 import {TokyoCenterView} from './util.js';
 import {renderCard} from './card.js';
-import {addressHandler} from './form.js';
+import {setAddress} from './form.js';
 
 const ESTATE_OBJECTS_NUMBER = 10;
 
 const map = L.map('map-canvas')
   .on('load', () => {
-    pageActivationHandler(false) // делаем страницу активной
+    deactivatePage(false) // делаем страницу активной
   })
   .setView({
     lat: TokyoCenterView.LATITUDE,
@@ -52,7 +52,7 @@ export const resetMainPinPosition = () => {
 
 mainPinMarker.addTo(map); // отрисовка главной метки
 
-addressHandler(TokyoCenterView.LATITUDE, TokyoCenterView.LONGITUDE);
+setAddress(TokyoCenterView.LATITUDE, TokyoCenterView.LONGITUDE);
 
 mainPinMarker.on('move', (evt) => { // передача координат главной метки в поле адреса после перемещения
   const MainMarkerCoordinates = {
@@ -62,7 +62,7 @@ mainPinMarker.on('move', (evt) => { // передача координат гл�
   }
   const formAddressLatitude = Math.round(MainMarkerCoordinates.LATITUDE * 10 ** MainMarkerCoordinates.SIGNS_NUMBER) / 10 ** MainMarkerCoordinates.SIGNS_NUMBER;
   const formAddressLongitude = Math.round(MainMarkerCoordinates.LONGITUDE * 10 ** MainMarkerCoordinates.SIGNS_NUMBER) / 10 ** MainMarkerCoordinates.SIGNS_NUMBER;
-  addressHandler(formAddressLatitude, formAddressLongitude);
+  setAddress(formAddressLatitude, formAddressLongitude);
 });
 
 const PinIcon = L.icon({ // создание иконок для меток, кроме главной
