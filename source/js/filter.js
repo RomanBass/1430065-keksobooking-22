@@ -13,12 +13,12 @@ const deactivateFilters = (deactivator) => { // деактивируется ф�
   });
 }
 
-const housingTypeChangeHandler = (estateObject) => { // проверка совпадения estateObject-та с выбранным типом жилья
+const changeHousingType = (estateObject) => { // проверка совпадения estateObject-та с выбранным типом жилья
   const housingType = filterForm.querySelector('#housing-type option:checked').value; // текущий параметр типа жилья
   return housingType === estateObject.offer.type || housingType === 'any';
 };
 
-const priceRangeChangeHandler = (estateObject) => { // проверка попадания estateObject-та в выбранный диапазон цен
+const changePriceRange = (estateObject) => { // проверка попадания estateObject-та в выбранный диапазон цен
 
   const PriceRangeName = {
     ANY: 'any',
@@ -50,12 +50,12 @@ const priceRangeChangeHandler = (estateObject) => { // проверка попа
   return indicator;
 };
 
-const housingRoomsChangeHandler = (estateObject) => { // проверка в estateObject-те выбранного количества комнат
+const changeHousingRooms = (estateObject) => { // проверка в estateObject-те выбранного количества комнат
   const housingRooms = filterForm.querySelector('#housing-rooms option:checked').value; // текущий параметр количества комнат
   return estateObject.offer.rooms === parseInt(housingRooms, 10) || housingRooms === 'any';
 };
 
-const housingGuestsChangeHandler = (estateObject) => { // проверка в estateObject-те выбранного количества гостей
+const changeHousingGuests = (estateObject) => { // проверка в estateObject-те выбранного количества гостей
   const housingGuests = filterForm.querySelector('#housing-guests option:checked').value; // текущий параметр количества гостей
   return estateObject.offer.guests === parseInt(housingGuests, 10) || housingGuests === 'any';
 };
@@ -75,10 +75,10 @@ const facilitiesChangeHandler = (estateObject) => { // проверка нали
 const filterEstateObjects = (cb, dataToFilter) => { // фильтрует данных с сервера
   filterForm.addEventListener('change', () => {
     const filteredOffers = dataToFilter.filter((estateObject) => {
-      return housingTypeChangeHandler(estateObject) &&
-             priceRangeChangeHandler(estateObject) &&
-             housingRoomsChangeHandler(estateObject) &&
-             housingGuestsChangeHandler(estateObject) &&
+      return changeHousingType(estateObject) &&
+             changePriceRange(estateObject) &&
+             changeHousingRooms(estateObject) &&
+             changeHousingGuests(estateObject) &&
              facilitiesChangeHandler(estateObject);
     });
     cb(filteredOffers);

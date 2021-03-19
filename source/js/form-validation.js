@@ -39,7 +39,7 @@ export const priceInputHandler = () => { // функция валидации в
   priceInput.reportValidity();
 };
 
-export const priceRangeChangeHandler = (evt) => { // изменение минимальной цены при изменении типа жилья
+export const PriceRangeChangeHandler = (evt) => { // изменение минимальной цены при изменении типа жилья
   const FormEstateObjectTypeValue = {
     BUNGALOW: 'bungalow',
     FLAT: 'flat',
@@ -89,11 +89,11 @@ export const priceInvalidHandler = () => {  // валидация наличия
   }
 };
 
-export const selectorsChangeHandler = (firstSelector, secondSelector) => { // синхронизация двух селекторов
+export const synchronizeSelectors = (firstSelector, secondSelector) => { // синхронизация двух селекторов
   secondSelector.value = firstSelector.value;
 };
 
-export const roomsAndGuestsChangeHandler = (roomsNumber, guestsNumber) => {
+export const matchRoomsAndGuests = (roomsNumber, guestsNumber) => {
   if (roomsNumber.value === '100' && guestsNumber.value !== '0') {
     guestsNumber.setCustomValidity('Выбранное помещение не предназначено для проживания гостей');
   } else if (roomsNumber.value !== '100' && guestsNumber.value === '0') {

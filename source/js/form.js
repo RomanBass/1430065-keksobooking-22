@@ -1,5 +1,5 @@
-import {titleInputHandler, titleInvalidHandler, priceInputHandler, priceRangeChangeHandler, priceInvalidHandler,
-  selectorsChangeHandler, roomsAndGuestsChangeHandler} from './form-validation.js';
+import {titleInputHandler, titleInvalidHandler, priceInputHandler, PriceRangeChangeHandler, priceInvalidHandler,
+  synchronizeSelectors, matchRoomsAndGuests} from './form-validation.js';
 import {sendData} from './server.js';
 import {TokyoCenterView} from './util.js';
 
@@ -22,30 +22,27 @@ const formFieldSets = form.querySelectorAll('fieldset');
 
 titleInput.addEventListener('input', titleInputHandler);
 titleInput.addEventListener('invalid', titleInvalidHandler);
-housingTypeSelector.addEventListener('change', priceRangeChangeHandler);
-
-priceInput.addEventListener('input', () => {
-  priceInputHandler(); // валидация величины цены
-});
+housingTypeSelector.addEventListener('change', PriceRangeChangeHandler);
+priceInput.addEventListener('input', priceInputHandler); // валидация величины цены
 
 priceInput.addEventListener('invalid', priceInvalidHandler);
 departureSelector.addEventListener('change', () => {
-  selectorsChangeHandler(departureSelector, entrySelector);
+  synchronizeSelectors(departureSelector, entrySelector);
 });
 
 entrySelector.addEventListener('change', () => {
-  selectorsChangeHandler(entrySelector, departureSelector);
+  synchronizeSelectors(entrySelector, departureSelector);
 });
 
-roomsAndGuestsChangeHandler(roomsNumberSelector, guestsNumberSelector);
+matchRoomsAndGuests(roomsNumberSelector, guestsNumberSelector);
 guestsNumberSelector.addEventListener('change', () => {
-  roomsAndGuestsChangeHandler(roomsNumberSelector, guestsNumberSelector);
+  matchRoomsAndGuests(roomsNumberSelector, guestsNumberSelector);
 });
 roomsNumberSelector.addEventListener('change', () => {
-  roomsAndGuestsChangeHandler(roomsNumberSelector, guestsNumberSelector);
+  matchRoomsAndGuests(roomsNumberSelector, guestsNumberSelector);
 });
 
-export const setFormSubmitHandler = (callback) => {
+export const handleFormSubmission = (callback) => {
   const throwSuccessNotice = () => { // вывод сообщения об успешной отправке формы
     main.appendChild(formSuccessNotice);
 
@@ -119,6 +116,6 @@ export const deactivateForm = (deactivator) => {
 };
 
 addressInput.readOnly = true; // делаем поле адреса только для чтения
-selectorsChangeHandler(entrySelector, departureSelector); // синхронизация времён въезда и выезда
+synchronizeSelectors(entrySelector, departureSelector); // синхронизация времён въезда и выезда
 
 export {form, titleInput, housingTypeSelector, priceInput, formResetButton};
