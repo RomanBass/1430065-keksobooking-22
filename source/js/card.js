@@ -21,14 +21,21 @@ const renderCard = (estateObject) => {
   const featuresList = estateObject.offer.features;
   const photoGallery = newCard.querySelector('.popup__photos');
   const photosList = estateObject.offer.photos;
+  const descriptionSection = newCard.querySelector('.popup__description');
+  const descriptionText = estateObject.offer.description;
 
   newCard.querySelector('img').src = estateObject.author.avatar;
   newCard.querySelector('.popup__title').textContent = estateObject.offer.title;
-  newCard.querySelector('.popup__text--address').innerHTML = estateObject.offer.address;
-  newCard.querySelector('.popup__text--price').innerHTML = `${estateObject.offer.price}&#x20bd/ночь`;
+  newCard.querySelector('.popup__text--address').textContent = estateObject.offer.address;
+  newCard.querySelector('.popup__text--price').textContent = `${estateObject.offer.price}₽/ночь`;
   newCard.querySelector('.popup__text--capacity').textContent = `${estateObject.offer.rooms} комнаты для ${estateObject.offer.guests} гостей`;
   newCard.querySelector('.popup__text--time').textContent = `Заезд после ${estateObject.offer.checkin}, выезд до ${estateObject.offer.checkout}`;
-  newCard.querySelector('.popup__description').textContent = estateObject.offer.description;
+
+  if (!descriptionText) {
+    descriptionSection.remove();
+  } else {
+    descriptionSection.textContent = descriptionText;
+  }
 
   switch (estateObject.offer.type) {
     case ServerEstateObjectTypeValue.BUNGALOW:
@@ -45,19 +52,27 @@ const renderCard = (estateObject) => {
       break;
   }
 
-  possibleFeaturesList.innerHTML = '';
-  for (let i = 0; i < featuresList.length; i++) {
-    const element = `<li class="popup__feature popup__feature--${featuresList[i]}"></li>`;
-    possibleFeaturesList.insertAdjacentHTML('beforeend', element);
+  if (!featuresList.length) {
+    possibleFeaturesList.remove();
+  } else {
+    possibleFeaturesList.innerHTML = '';
+    featuresList.forEach((element => {
+      const feature = `<li class="popup__feature popup__feature--${element}"></li>`;
+      possibleFeaturesList.insertAdjacentHTML('beforeend', feature);
+    }))
   }
 
-  photoGallery.innerHTML = '';
-  for (let i = 0; i < photosList.length; i++) {
-    const element = `<img src="${photosList[i]}" class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>`;
-    photoGallery.insertAdjacentHTML('beforeend', element);
+  if (!photosList.length) {
+    photoGallery.remove();
+  } else {
+    photoGallery.innerHTML = '';
+    photosList.forEach(element => {
+      const photo = `<img src="${element}" class="popup__photo" width="45" height="40" alt="Фотография жилья"></img>`;
+      photoGallery.insertAdjacentHTML('beforeend', photo);
+    })
   }
 
   return newCard;
 };
 
-export {renderCard}
+export {renderCard};

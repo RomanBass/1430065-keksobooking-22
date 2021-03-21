@@ -46,22 +46,32 @@ export const handleFormSubmission = (callback) => {
   const throwSuccessNotice = () => { // вывод сообщения об успешной отправке формы
     main.appendChild(formSuccessNotice);
 
-    document.addEventListener('click', () => {
+    const successMessageClickHandler = () => {
       if (main.contains(formSuccessNotice)) {
         main.removeChild(formSuccessNotice);
         form.reset();
         callback();
       }
-    });
+      document.removeEventListener('click', successMessageClickHandler);
+      document.removeEventListener('keydown', successMessageEscKeydownHandler);
+    }
 
-    document.addEventListener('keydown', (evtKeydown) => { // закрытие сообщения по нажатию esc
+    document.addEventListener('click', successMessageClickHandler);
+
+    const successMessageEscKeydownHandler = (evtKeydown) => {
       if (evtKeydown.key === 'Escape' && main.contains(formSuccessNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
         main.removeChild(formSuccessNotice);
         form.reset();
         callback();
       }
-    });
+      document.removeEventListener('click', successMessageClickHandler);
+      document.removeEventListener('keydown', successMessageEscKeydownHandler);
+    }
+
+    document.addEventListener('keydown', successMessageEscKeydownHandler); // закрытие сообщения по нажатию esc
+
   };
+
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
@@ -85,17 +95,26 @@ const throwErrorNotice = (errorMessage) => { // вывод сообщения о
   main.appendChild(formErrorNotice); // добавление в блок main сообщения об ошибке
   formErrorNoticeText.textContent = errorMessage; // корректируем сообщение
 
-  document.addEventListener('click', () => {
+  const formErrorClickHandler = () => {
     if (main.contains(formErrorNotice)) {
       main.removeChild(formErrorNotice);
     }
-  });
+    document.removeEventListener('click', formErrorClickHandler);
+    document.removeEventListener('keydown', formErrorEscKeydownHandler);
+  }
 
-  document.addEventListener('keydown', (evtKeydown) => { // закрытие сообщения по нажатию esc
+  document.addEventListener('click', formErrorClickHandler);
+
+  const formErrorEscKeydownHandler = (evtKeydown) => {
     if (evtKeydown.key === 'Escape' && main.contains(formErrorNotice)) { // блокировка, чтобы не выдавалась ошибка об отсутствии дочернего элемента
       main.removeChild(formErrorNotice);
     }
-  });
+    document.removeEventListener('click', formErrorClickHandler);
+    document.removeEventListener('keydown', formErrorEscKeydownHandler);
+  }
+
+  document.addEventListener('keydown', formErrorEscKeydownHandler); // закрытие сообщения по нажатию esc
+
 };
 
 export const setAddress = (latitude, longitude) => {
