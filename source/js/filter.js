@@ -1,3 +1,15 @@
+const PriceRangeName = {
+  ANY: 'any',
+  LOW: 'low',
+  MIDDLE: 'middle',
+  HIGH: 'high',
+}
+
+const PriceRangeLimit = {
+  LOW: 10000,
+  HIGH: 50000,
+}
+
 const filterForm = document.querySelector('.map__filters');
 const filters = filterForm.querySelectorAll('select, fieldset');
 
@@ -19,19 +31,6 @@ const changeHousingType = (estateObject) => { // проверка совпаде
 };
 
 const changePriceRange = (estateObject) => { // проверка попадания estateObject-та в выбранный диапазон цен
-
-  const PriceRangeName = {
-    ANY: 'any',
-    LOW: 'low',
-    MIDDLE: 'middle',
-    HIGH: 'high',
-  }
-
-  const PriceRangeLimit = {
-    LOW: 10000,
-    HIGH: 50000,
-  }
-
   const housingPrice = filterForm.querySelector('#housing-price option:checked').value; // текущий параметр диапазона цен из селектора
   let indicator = false;
   switch (housingPrice) {

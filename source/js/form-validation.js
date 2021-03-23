@@ -3,6 +3,29 @@ import {titleInput, priceInput} from './form.js';
 const TITLE_MIN_LENGTH = 30;
 const TITLE_MAX_LENGTH = 100;
 const MAX_PRICE = 1000000;
+const HUNDRED_ROOMS_OPTION_IDENTIFICATOR = '100';
+const PLACE_NOT_FOR_GUESTS_IDENTIFICATOR = '0';
+
+const FormEstateObjectTypeValue = {
+  BUNGALOW: 'bungalow',
+  FLAT: 'flat',
+  HOUSE: 'house',
+  PALACE: 'palace',
+}
+
+const FormEstateObjectTypeText = {
+  BUNGALOW: 'Бунгало',
+  FLAT: 'Квартира',
+  HOUSE: 'Дом',
+  PALACE: 'Дворец',
+}
+
+const MinPrice = {
+  BUNGALOW: 0,
+  FLAT: 1000,
+  HOUSE: 5000,
+  PALACE: 10000,
+}
 
 let minPrice = 1000;
 let estateObjectType = 'Квартира';
@@ -40,27 +63,6 @@ export const priceInputHandler = () => { // функция валидации в
 };
 
 export const PriceRangeChangeHandler = (evt) => { // изменение минимальной цены при изменении типа жилья
-  const FormEstateObjectTypeValue = {
-    BUNGALOW: 'bungalow',
-    FLAT: 'flat',
-    HOUSE: 'house',
-    PALACE: 'palace',
-  }
-
-  const FormEstateObjectTypeText = {
-    BUNGALOW: 'Бунгало',
-    FLAT: 'Квартира',
-    HOUSE: 'Дом',
-    PALACE: 'Дворец',
-  }
-
-  const MinPrice = {
-    BUNGALOW: 0,
-    FLAT: 1000,
-    HOUSE: 5000,
-    PALACE: 10000,
-  }
-
   switch (evt.target.value) {
     case FormEstateObjectTypeValue.BUNGALOW:
       minPrice = MinPrice.BUNGALOW;
@@ -94,12 +96,12 @@ export const synchronizeSelectors = (firstSelector, secondSelector) => { // си
 };
 
 export const matchRoomsAndGuests = (roomsNumber, guestsNumber) => {
-  if (roomsNumber.value === '100' && guestsNumber.value !== '0') {
+  if (roomsNumber.value === HUNDRED_ROOMS_OPTION_IDENTIFICATOR && guestsNumber.value !== PLACE_NOT_FOR_GUESTS_IDENTIFICATOR) {
     guestsNumber.setCustomValidity('Выбранное помещение не предназначено для проживания гостей');
-  } else if (roomsNumber.value !== '100' && guestsNumber.value === '0') {
+  } else if (roomsNumber.value !== HUNDRED_ROOMS_OPTION_IDENTIFICATOR && guestsNumber.value === PLACE_NOT_FOR_GUESTS_IDENTIFICATOR) {
     guestsNumber.setCustomValidity('Варианту "не для гостей" соответствует только помещение в 100 комнат');
   } else if (roomsNumber.value < guestsNumber.value) {
-    guestsNumber.setCustomValidity('Количество гостей не может быть больше количества мест');
+    guestsNumber.setCustomValidity('Количество гостей не может быть больше количества комнат');
   } else {
     guestsNumber.setCustomValidity('');
   }

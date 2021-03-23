@@ -1,21 +1,20 @@
+const ServerEstateObjectTypeValue = {
+  BUNGALOW: 'bungalow',
+  FLAT: 'flat',
+  HOUSE: 'house',
+  PALACE: 'palace',
+};
+
+const CardEstateObjectTypeText = {
+  BUNGALOW: 'Бунгало',
+  FLAT: 'Квартира',
+  HOUSE: 'Дом',
+  PALACE: 'Дворец',
+};
+
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 
 const renderCard = (estateObject) => {
-
-  const ServerEstateObjectTypeValue = {
-    BUNGALOW: 'bungalow',
-    FLAT: 'flat',
-    HOUSE: 'house',
-    PALACE: 'palace',
-  }
-
-  const CardEstateObjectTypeText = {
-    BUNGALOW: 'Бунгало',
-    FLAT: 'Квартира',
-    HOUSE: 'Дом',
-    PALACE: 'Дворец',
-  }
-
   const newCard = cardTemplate.cloneNode(true);
   const possibleFeaturesList = newCard.querySelector('.popup__features');
   const featuresList = estateObject.offer.features;

@@ -5,6 +5,7 @@ import {renderCard} from './card.js';
 import {setAddress} from './form.js';
 
 const ESTATE_OBJECTS_NUMBER = 10;
+const ARRAY_INITIAL_ELEMENT_INDEX = 0;
 
 const map = L.map('map-canvas')
   .on('load', () => {
@@ -71,23 +72,20 @@ const PinIcon = L.icon({ // создание иконок для меток, к�
   iconAnchor: [20, 40],
 });
 
-
 const pinsLayerGroup = L.layerGroup() // создаём группу слоёв, куда будут добавляться все маркеры, кроме основного
   .addTo(map);                      // добавляем группу слоёв на карту
 
 const renderPins = (estateObjects) => { // отрисовка меток, кроме главной
-  const cyclesNumber = estateObjects.length <= ESTATE_OBJECTS_NUMBER ? estateObjects.length : ESTATE_OBJECTS_NUMBER; // считается количество итераций, на случай, если с сервера придёт данных меньше, чем количество показываемых объектов
 
   if (pinsLayerGroup.getLayers().length) { // если группа слоев содержит не пустой массив, то...
     pinsLayerGroup.clearLayers(); // затираются все ранее созданные метки
   }
 
-  for(let i = 0; i < cyclesNumber; i++) {
-
+  estateObjects.slice(ARRAY_INITIAL_ELEMENT_INDEX, ESTATE_OBJECTS_NUMBER).forEach((element) => {
     const PinMarker = L.marker(
       {
-        lat: estateObjects[i].location.lat,
-        lng: estateObjects[i].location.lng,
+        lat: element.location.lat,
+        lng: element.location.lng,
       },
       {
         icon: PinIcon,
@@ -96,12 +94,12 @@ const renderPins = (estateObjects) => { // отрисовка меток, кро
 
     PinMarker
       .bindPopup(    // вызов попапа карточки объекта
-        renderCard(estateObjects[i]),
+        renderCard(element),
       );
 
     pinsLayerGroup
       .addLayer(PinMarker);
-  }
+  })
 }
 
 export {TokyoCenterView, renderPins, map};

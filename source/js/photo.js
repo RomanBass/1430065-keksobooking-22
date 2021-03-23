@@ -23,7 +23,6 @@ avatarFileChooser.addEventListener('change', () => {
     });
     reader.readAsDataURL(file);
   }
-
 });
 
 housingFileChooser.addEventListener('change', () => {
@@ -43,5 +42,4 @@ housingFileChooser.addEventListener('change', () => {
     });
     reader.readAsDataURL(file);
   }
-
 });
